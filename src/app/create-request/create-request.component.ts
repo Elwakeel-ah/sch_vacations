@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Utility } from '../services/utility.service';
+import { HttpRequests } from '../services/http-requests.service';
 
 @Component({
   selector: 'app-create-request',
@@ -13,6 +15,11 @@ export class CreateRequestComponent {
   endDate!: Date;
   dateError = false;
   errorMessage = '';
+
+  constructor(
+    private readonly utility: Utility,
+    private readonly httpRequests: HttpRequests
+  ) {}
 
   ngOnInit() {
     this.vacationDays = 0;
@@ -30,63 +37,51 @@ export class CreateRequestComponent {
     // make sure that start and end date are chosen.
     if (!this.startDate || !this.endDate) {
       this.dateError = true;
-      this.errorMessage = 'you have to choose start and End Date';
+      this.errorMessage = 'You have to choose start and end Date';
       return;
     }
 
-    console.log('--->');
+    this.httpRequests
+      .createVacationRequest(
+        this.startDate,
+        this.endDate,
+        this.httpRequests.vacationType
+      )
+      .subscribe({
+        next: (value) => {},
+      });
   }
 
   onChangeStartDate() {
     this.dateError = false;
     this.errorMessage = '';
+    this.vacationDays = 0;
     this.startDate = new Date(this.vacationForm.value.startDate);
     if (!this.vacationForm.value.endDate) return;
     this.checkDateEligibility();
-    this.calculateVacations();
+    this.vacationDays = this.utility.calculateVacations(
+      this.startDate,
+      this.endDate
+    );
   }
   onChangeEndDate() {
     this.dateError = false;
     this.errorMessage = '';
+    this.vacationDays = 0;
     this.endDate = new Date(this.vacationForm.value.endDate);
     if (!this.vacationForm.value.startDate) return;
     this.checkDateEligibility();
-    this.calculateVacations();
-  }
-
-  calculateVacations() {
-    //calculate the total time difference.
-    const diffTime = Math.abs(
-      this.endDate.getTime() - this.startDate.getTime()
+    this.vacationDays = this.utility.calculateVacations(
+      this.startDate,
+      this.endDate
     );
-
-    //calculate the total days.
-    const totalDays = Math.ceil(diffTime / (24 * 60 * 60 * 1000)) + 1;
-
-    // calculate the weekends to be excluded.
-    const weekends = this.calculateWeekends(this.startDate, this.endDate);
-
-    // calculate the vacations day.
-    this.vacationDays = totalDays - weekends;
-  }
-
-  calculateWeekends(start: Date, end: Date) {
-    let weekends = 0;
-    let current = start;
-    while (current <= end) {
-      const dayOfWeek = current.getDay();
-      //check if the day is a weekend Friday or saturday.
-      if (dayOfWeek == 5 || dayOfWeek == 6) weekends++;
-      current = new Date(current.getTime() + 24 * 60 * 60 * 1000);
-    }
-    return weekends;
   }
 
   checkDateEligibility() {
     // check if the start date and end date are chosen incorrectly
     if (this.startDate > this.endDate) {
       this.dateError = true;
-      this.errorMessage = 'start and end date are chosen incorrectly';
+      this.errorMessage = 'Start and end date are chosen incorrectly';
       return;
     }
   }
