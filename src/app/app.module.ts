@@ -7,6 +7,7 @@ import { VacationTypeComponent } from './vacation-type/vacation-type.component';
 import { CreateRequestComponent } from './create-request/create-request.component';
 import { VacationBalanceComponent } from './vacation-balance/vacation-balance.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CreateRequestComponent,
     VacationBalanceComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

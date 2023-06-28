@@ -3,9 +3,30 @@
     <span class="navbar-brand mb-0 h1">HR Vacation Requests</span>
   </div>
 </nav>
+
+<div class="container" *ngIf="httpError">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div
+      class="row justify-content-between alert alert-danger mt-2 col-12 col-sm-12 col-lg-7"
+      role="alert"
+    >
+      <p class="col-9">
+        <strong>Oh No! </strong>
+        {{ httpErrorMessage ? httpErrorMessage : "something went wrong" }}
+      </p>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="removeErrorHandler()"
+      ></button>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="d-flex flex-column justify-content-center align-items-center">
-    <div class="card shadow mt-3 mb-2 col-12 col-sm-12 col-lg-7">
+    <div class="card shadow mt-2 mb-2 col-12 col-sm-12 col-lg-7">
       <div class="card-header fw-bold text-white">Select Vacation Type</div>
       <div class="card-body">
         <app-vacation-type></app-vacation-type>
@@ -20,7 +41,7 @@
     </div>
 
     <div class="card shadow mt-3 mb-2 col-12 col-sm-12 col-lg-7">
-      <div class="card-header fw-bold text-white">Vacation Balance</div>
+      <div class="card-header fw-bold text-white">Vacation Balance Report</div>
       <div class="card-body">
         <app-vacation-balance></app-vacation-balance>
       </div>

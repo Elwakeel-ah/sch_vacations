@@ -1,5 +1,5 @@
-<div class="row justify-content-center">
-  <div class="col-6">
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <div class="col-8" *ngIf="viewSummary">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -12,17 +12,48 @@
       <tbody class="table-group-divider">
         <tr>
           <td>Annual</td>
-          <td>21</td>
-          <td>2</td>
-          <td>19</td>
+          <td>{{ annualVacations }}</td>
+          <td>{{ takenAnnualVacations }}</td>
+          <td>{{ annualVacations - takenAnnualVacations }}</td>
         </tr>
         <tr>
           <td>Sick</td>
-          <td>14</td>
-          <td>1</td>
-          <td>13</td>
+          <td>{{ sickVacations }}</td>
+          <td>{{ takenSickVacations }}</td>
+          <td>{{ sickVacations - takenSickVacations }}</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <div class="col-10" *ngIf="!viewSummary">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Type</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+        </tr>
+      </thead>
+      <tbody
+        class="table-group-divider"
+        *ngFor="let record of allVacationRecords; let i = index"
+      >
+        <tr>
+          <td>{{ i + 1 }}</td>
+          <td>{{ record.vacationType }}</td>
+          <td>{{ record.startDate }}</td>
+          <td>{{ record.endDate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button
+    class="btn btn-primary mt-3 col-6 submit-vacation"
+    (click)="onViewHandler()"
+  >
+    {{ viewSummary ? "View Details" : "View Summary" }}
+  </button>
 </div>

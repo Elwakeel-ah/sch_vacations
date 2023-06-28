@@ -54,4 +54,13 @@
     </div>
   </form>
 </div>
-<p *ngIf="dateError" class="errMsg mt-2">{{ errorMessage }}</p>
+<p *ngIf="!dateError" class="mt-2">
+  <em> <small> Requests will be submitted instantly. </small> </em>
+</p>
+<p *ngIf="dateError" class="errMsg mt-2">
+  <em>
+    <small>
+      {{ errorMessage }}
+    </small>
+  </em>
+</p>
