@@ -4,6 +4,7 @@ import {
   BehaviorSubject,
   Subscription,
   catchError,
+  map,
   take,
   tap,
   throwError,
@@ -29,27 +30,41 @@ export class HttpRequests {
   ) {}
 
   getAnnualVacationsDays() {
-    return this.http.get('http://localhost:3500/cts/annual').pipe(
-      take(1),
-      catchError((error) => {
-        return throwError(() => {
-          this.$httpError.next(true);
-          this.$httpErrorMessage.next(error?.error?.messages[0]);
-        });
-      })
-    );
+    return this.http
+      .get<{ status: boolean; messages: string[]; data: number[] }>(
+        'http://localhost:3500/cts/annual'
+      )
+      .pipe(
+        take(1),
+        map((response) => {
+          return response?.data[0];
+        }),
+        catchError((error) => {
+          return throwError(() => {
+            this.$httpError.next(true);
+            this.$httpErrorMessage.next(error?.error?.messages[0]);
+          });
+        })
+      );
   }
 
   getSickVacationsDays() {
-    return this.http.get('http://localhost:3500/cts/sick').pipe(
-      take(1),
-      catchError((error) => {
-        return throwError(() => {
-          this.$httpError.next(true);
-          this.$httpErrorMessage.next(error?.error?.messages[0]);
-        });
-      })
-    );
+    return this.http
+      .get<{ status: boolean; messages: string[]; data: number[] }>(
+        'http://localhost:3500/cts/sick'
+      )
+      .pipe(
+        take(1),
+        map((response) => {
+          return response?.data[0];
+        }),
+        catchError((error) => {
+          return throwError(() => {
+            this.$httpError.next(true);
+            this.$httpErrorMessage.next(error?.error?.messages[0]);
+          });
+        })
+      );
   }
 
   getVacationsRecords() {
